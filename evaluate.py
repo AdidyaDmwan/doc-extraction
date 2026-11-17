@@ -54,6 +54,7 @@ def evaluate_document(row, truth) -> dict:
         "seconds": row["processing_seconds"],
         "extracted": data is not None,
         "difficulty": truth.get("difficulty"),
+        "confidence": data.get("confidence") if data else None,
     }
     for field in FIELDS:
         if data is None:
@@ -156,6 +157,19 @@ def main():
             out(f"- {r['filename']}: salah pada {', '.join(r['wrong_fields'])}")
     out("")
 
+    # 2b. Kalibrasi confidence: apakah angka keyakinan AI benar-benar berguna?
+    with_conf = [r for r in evaluated if r["confidence"] is not None]
+    if with_conf:
+        out("## Kalibrasi confidence (apakah keyakinan AI bisa dipercaya?)\n")
+        out("| Confidence | Dokumen | Semua field benar | Persentase benar |")
+        out("|---|---|---|---|")
+        for value in sorted({round(r["confidence"], 2) for r in with_conf}, reverse=True):
+            grp = [r for r in with_conf if round(r["confidence"], 2) == value]
+            g_ok = sum(r["all_correct"] for r in grp)
+            out(f"| {value:.2f} | {len(grp)} | {g_ok}/{len(grp)} | {pct(g_ok, len(grp))} |")
+        out("\nJika dokumen yang salah muncul di nilai confidence tinggi, angka itu tidak bisa "
+            "menjadi satu-satunya dasar persetujuan otomatis.\n")
+
     # 3. Hasil per tingkat kesulitan (hanya jika ground truth punya kolom 'difficulty')
     levels = [lv for lv in DIFFICULTY_ORDER if any(r["difficulty"] == lv for r in evaluated)]
     if levels:
@@ -214,6 +228,7 @@ def main():
     else:
         out("- Evaluasi ini memakai data dummy yang dibuat otomatis (bersih dan rapi), sehingga akurasi cenderung tinggi.")
         out("- Hasil pada dokumen nyata (miring, buram, format beragam) perlu diuji terpisah.")
+    out("- Yang dievaluasi: 8 field tingkat dokumen. Isi detail tiap item (deskripsi, harga satuan, jumlah) belum dibandingkan dengan ground truth.")
     out("- Waktu manual adalah asumsi, bukan pengukuran.")
 
     report = "\n".join(lines)

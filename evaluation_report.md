@@ -28,6 +28,14 @@ Dokumen dengan **semua field benar**: 40/40 (100.0%)
 | ...dari itu yang memang salah | 0 |
 | ...dari itu yang sebenarnya benar (review tidak perlu) | 0 |
 
+## Kalibrasi confidence (apakah keyakinan AI bisa dipercaya?)
+
+| Confidence | Dokumen | Semua field benar | Persentase benar |
+|---|---|---|---|
+| 1.00 | 40 | 40/40 | 100.0% |
+
+Jika dokumen yang salah muncul di nilai confidence tinggi, angka itu tidak bisa menjadi satu-satunya dasar persetujuan otomatis.
+
 ## Waktu pemrosesan
 
 | Metrik | Hasil |
@@ -48,4 +56,5 @@ Dokumen dengan **semua field benar**: 40/40 (100.0%)
 
 - Evaluasi ini memakai data dummy yang dibuat otomatis (bersih dan rapi), sehingga akurasi cenderung tinggi.
 - Hasil pada dokumen nyata (miring, buram, format beragam) perlu diuji terpisah.
+- Yang dievaluasi: 8 field tingkat dokumen. Isi detail tiap item (deskripsi, harga satuan, jumlah) belum dibandingkan dengan ground truth.
 - Waktu manual adalah asumsi, bukan pengukuran.

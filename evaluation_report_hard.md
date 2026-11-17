@@ -32,6 +32,18 @@ Dokumen salah yang lolos otomatis:
 - hard_invoice_009.jpg: salah pada invoice_date
 - hard_invoice_030.jpg: salah pada invoice_number
 
+## Kalibrasi confidence (apakah keyakinan AI bisa dipercaya?)
+
+| Confidence | Dokumen | Semua field benar | Persentase benar |
+|---|---|---|---|
+| 1.00 | 25 | 25/25 | 100.0% |
+| 0.99 | 1 | 1/1 | 100.0% |
+| 0.98 | 2 | 2/2 | 100.0% |
+| 0.95 | 11 | 9/11 | 81.8% |
+| 0.85 | 1 | 1/1 | 100.0% |
+
+Jika dokumen yang salah muncul di nilai confidence tinggi, angka itu tidak bisa menjadi satu-satunya dasar persetujuan otomatis.
+
 ## Hasil per tingkat kesulitan
 
 | Tingkat | Dokumen | Semua field benar | Disetujui otomatis | Salah tapi lolos otomatis |
@@ -64,4 +76,5 @@ Dokumen salah yang lolos otomatis:
 
 - Set data ini adalah dokumen sintetis yang sengaja dirusak (dimiringkan, diburamkan, diberi noise dan bayangan).
 - Ini masih simulasi kondisi nyata, bukan foto dokumen asli.
+- Yang dievaluasi: 8 field tingkat dokumen. Isi detail tiap item (deskripsi, harga satuan, jumlah) belum dibandingkan dengan ground truth.
 - Waktu manual adalah asumsi, bukan pengukuran.
