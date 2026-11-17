@@ -13,6 +13,7 @@ from tenacity import (
     wait_exponential,
 )
 
+from .normalize import normalize_currency
 from .schema import Invoice
 
 load_dotenv()
@@ -44,6 +45,7 @@ PROMPT = """Ekstrak data dari dokumen invoice ini sesuai skema.
 Aturan:
 - Jika sebuah field tidak ada atau tidak terbaca, isi null. JANGAN menebak.
 - Tanggal harus dalam format YYYY-MM-DD.
+- Field 'currency' harus berupa kode mata uang ISO 4217 tiga huruf (misalnya IDR untuk Rupiah/Rp, USD untuk dolar AS). Jangan menulis simbol seperti 'Rp' atau '$'.
 - Angka ditulis tanpa simbol mata uang dan tanpa pemisah ribuan (contoh: 1500000).
 - Isi 'confidence' dengan jujur (0.0 sampai 1.0).
 - Daftarkan di 'uncertain_fields' setiap field yang Anda ragukan."""
@@ -101,6 +103,8 @@ def extract_invoice_with_model(path: str) -> tuple[Invoice, str]:
         if invoice is None:
             # Cadangan: parse manual dari teks JSON jika .parsed kosong
             invoice = Invoice.model_validate_json(resp.text)
+        # Rapikan penulisan mata uang ke kode ISO (aturan pasti, bukan tebakan AI)
+        invoice.currency = normalize_currency(invoice.currency)
         return invoice, model
 
     raise RuntimeError(f"Semua model gagal. Error terakhir: {last_error}")

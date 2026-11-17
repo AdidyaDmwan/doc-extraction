@@ -1,3 +1,4 @@
+import re
 from datetime import datetime
 from typing import List, Tuple
 
@@ -29,6 +30,7 @@ def validate(inv: Invoice) -> List[str]:
         ("vendor_name", "nama vendor"),
         ("invoice_number", "nomor invoice"),
         ("invoice_date", "tanggal"),
+        ("currency", "mata uang"),
         ("total", "total"),
     ]
     for field, label in required:
@@ -43,6 +45,10 @@ def validate(inv: Invoice) -> List[str]:
                 errors.append("tahun pada tanggal tidak masuk akal")
         except ValueError:
             errors.append("format tanggal salah (harus YYYY-MM-DD)")
+
+    # 2b. Mata uang harus kode 3 huruf besar (misalnya IDR), bukan simbol seperti 'Rp'
+    if inv.currency and not re.fullmatch(r"[A-Z]{3}", inv.currency):
+        errors.append("format mata uang tidak valid (harus kode 3 huruf, misalnya IDR)")
 
     # 3. Total harus positif
     if inv.total is not None and inv.total <= 0:

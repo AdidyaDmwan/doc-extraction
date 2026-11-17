@@ -9,42 +9,40 @@ Dokumen dievaluasi: **40** dari 40 di ground truth
 | vendor_name | 40/40 | 100.0% |
 | invoice_number | 40/40 | 100.0% |
 | invoice_date | 40/40 | 100.0% |
-| currency | 39/40 | 97.5% |
+| currency | 40/40 | 100.0% |
 | subtotal | 40/40 | 100.0% |
 | tax | 40/40 | 100.0% |
 | total | 40/40 | 100.0% |
 | num_items | 40/40 | 100.0% |
 
-Dokumen dengan **semua field benar**: 39/40 (97.5%)
+Dokumen dengan **semua field benar**: 40/40 (100.0%)
 
 ## Efektivitas routing (human-in-the-loop)
 
 | Metrik | Hasil |
 |---|---|
 | Disetujui otomatis | 40/40 (100.0%) |
-| Akurasi pada yang disetujui otomatis | 39/40 (97.5%) |
-| Salah tapi lolos otomatis (paling berbahaya) | 1 |
+| Akurasi pada yang disetujui otomatis | 40/40 (100.0%) |
+| Salah tapi lolos otomatis (paling berbahaya) | 0 |
 | Dikirim ke review manusia | 0/40 (0.0%) |
 | ...dari itu yang memang salah | 0 |
 | ...dari itu yang sebenarnya benar (review tidak perlu) | 0 |
-
-Dokumen salah yang lolos otomatis:
-- invoice_014.pdf: salah pada currency
 
 ## Waktu pemrosesan
 
 | Metrik | Hasil |
 |---|---|
-| Median | 2.9 dtk |
-| P90 | 17.3 dtk |
-| Rata-rata | 6.5 dtk |
-| Tercepat / terlama | 1.6 / 30.2 dtk |
+| Median | 2.5 dtk |
+| P90 | 11.3 dtk |
+| Rata-rata | 8.9 dtk |
+| Tercepat / terlama | 1.4 / 131.5 dtk |
 | Asumsi waktu manual | 240 dtk (asumsi, bukan hasil pengukuran) |
-| Perbandingan terhadap asumsi manual | sekitar 84x lebih cepat (median) |
+| Perbandingan terhadap asumsi manual | sekitar 96x lebih cepat (median) |
 
 ## Model yang dipakai
 
-- gemini-3.5-flash-lite: 40 dokumen
+- gemini-3.5-flash-lite: 39 dokumen
+- gemini-3.1-flash-lite: 1 dokumen
 
 ## Catatan
 

@@ -1,5 +1,6 @@
 import sys
 
+from src.normalize import normalize_currency
 from src.schema import Invoice, LineItem
 from src.validate import AUTO_APPROVED, NEEDS_REVIEW, route, validate
 
@@ -40,6 +41,8 @@ CASES = [
     ("Format tanggal salah", variant(invoice_date="15/03/2026"), NEEDS_REVIEW),
     ("Hitungan item salah", variant(line_items=bad_item), NEEDS_REVIEW),
     ("Tidak ada item", variant(line_items=[]), NEEDS_REVIEW),
+    ("Mata uang ditulis Rp", variant(currency="Rp"), NEEDS_REVIEW),
+    ("Mata uang kosong", variant(currency=None), NEEDS_REVIEW),
     ("Confidence rendah", variant(confidence=0.6), NEEDS_REVIEW),
     ("AI ragu pada field", variant(uncertain_fields=["total"]), NEEDS_REVIEW),
 ]
@@ -59,6 +62,21 @@ def run_offline_tests():
     print(f"\n{len(CASES) - failed}/{len(CASES)} kasus sesuai harapan")
 
 
+def run_normalization_tests():
+    print("\n=== TES NORMALISASI MATA UANG ===\n")
+    expected = {
+        "Rp": "IDR", "Rp.": "IDR", "Rupiah": "IDR", "idr": "IDR", " IDR ": "IDR",
+        "usd": "USD", "EUR": "EUR", "": None, None: None, "$": "$", "mata uang aneh": "mata uang aneh",
+    }
+    failed = 0
+    for raw, want in expected.items():
+        got = normalize_currency(raw)
+        ok = got == want
+        failed += 0 if ok else 1
+        print(f"{'LULUS' if ok else 'GAGAL'}  {raw!r:18} -> {got!r}")
+    print(f"\n{len(expected) - failed}/{len(expected)} kasus sesuai harapan")
+
+
 def run_on_real_file(filename: str):
     from src.extract import extract_invoice_with_model
 
@@ -73,5 +91,6 @@ def run_on_real_file(filename: str):
 
 if __name__ == "__main__":
     run_offline_tests()
+    run_normalization_tests()
     if len(sys.argv) > 1:
         run_on_real_file(sys.argv[1])
