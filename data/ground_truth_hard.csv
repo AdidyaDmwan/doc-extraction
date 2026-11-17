@@ -1,0 +1,41 @@
+filename,vendor_name,invoice_number,invoice_date,currency,subtotal,tax,total,num_items,difficulty
+hard_invoice_001.jpg,PT Saefullah,INV-2026-9935,2026-02-22,IDR,1080000,118800,1198800,2,ringan
+hard_invoice_002.jpg,Perum Napitupulu,INV-2026-5557,2026-08-18,IDR,5230000,575300,5805300,5,sedang
+hard_invoice_003.jpg,CV Hassanah Rahmawati Tbk,INV-2026-8527,2026-01-23,IDR,6060000,666600,6726600,5,berat
+hard_invoice_004.jpg,CV Anggraini,INV-2026-2139,2026-04-09,IDR,4155000,457050,4612050,2,ringan
+hard_invoice_005.jpg,Perum Tarihoran (Persero) Tbk,INV-2024-7065,2026-07-06,IDR,2080000,228800,2308800,3,sedang
+hard_invoice_006.jpg,PT Wijayanti,INV-2024-6313,2026-10-13,IDR,3540000,389400,3929400,4,berat
+hard_invoice_007.jpg,UD Hutapea Pradipta,INV-2026-6155,2026-10-18,IDR,1880000,206800,2086800,2,ringan
+hard_invoice_008.jpg,PD Saputra Uyainah (Persero) Tbk,INV-2025-6930,2026-10-26,IDR,9780000,1075800,10855800,5,sedang
+hard_invoice_009.jpg,PT Pradana (Persero) Tbk,INV-2026-2876,2026-01-06,IDR,6695000,736450,7431450,6,berat
+hard_invoice_010.jpg,Perum Aryani Tbk,INV-2026-5889,2026-02-24,IDR,3930000,432300,4362300,4,ringan
+hard_invoice_011.jpg,CV Mandala Tbk,INV-2024-1949,2026-06-07,IDR,3555000,391050,3946050,4,sedang
+hard_invoice_012.jpg,PT Sihombing Tbk,INV-2024-8787,2026-03-06,IDR,1940000,213400,2153400,2,berat
+hard_invoice_013.jpg,PD Adriansyah Saptono,INV-2024-2049,2026-05-07,IDR,16510000,1816100,18326100,6,ringan
+hard_invoice_014.jpg,Perum Kurniawan Utami,INV-2026-8744,2026-03-09,IDR,4410000,485100,4895100,6,sedang
+hard_invoice_015.jpg,Perum Sudiati (Persero) Tbk,INV-2024-5073,2026-06-23,IDR,4590000,504900,5094900,5,berat
+hard_invoice_016.jpg,UD Marpaung Namaga,INV-2025-4502,2026-09-06,IDR,2760000,303600,3063600,6,ringan
+hard_invoice_017.jpg,Perum Sinaga,INV-2026-8973,2026-10-12,IDR,4755000,523050,5278050,3,sedang
+hard_invoice_018.jpg,PT Kusumo Tarihoran Tbk,INV-2024-1931,2026-09-29,IDR,4005000,440550,4445550,4,berat
+hard_invoice_019.jpg,PT Permadi Purnawati,INV-2024-1651,2026-10-19,IDR,1560000,171600,1731600,2,ringan
+hard_invoice_020.jpg,PT Laksita,INV-2024-2200,2026-10-16,IDR,7220000,794200,8014200,6,sedang
+hard_invoice_021.jpg,CV Prasetyo,INV-2024-5905,2026-09-28,IDR,5710000,628100,6338100,4,berat
+hard_invoice_022.jpg,UD Damanik,INV-2026-9004,2026-05-16,IDR,3910000,430100,4340100,4,ringan
+hard_invoice_023.jpg,Perum Prasetya Ardianto,INV-2026-5291,2026-03-08,IDR,1515000,166650,1681650,2,sedang
+hard_invoice_024.jpg,PD Wasita Nainggolan,INV-2025-3088,2026-03-17,IDR,8520000,937200,9457200,5,berat
+hard_invoice_025.jpg,PT Wahyuni,INV-2024-3662,2026-03-21,IDR,7000000,770000,7770000,4,ringan
+hard_invoice_026.jpg,UD Anggraini Zulkarnain Tbk,INV-2025-3608,2026-05-08,IDR,3060000,336600,3396600,2,sedang
+hard_invoice_027.jpg,PT Halim,INV-2024-1387,2026-04-27,IDR,3040000,334400,3374400,2,berat
+hard_invoice_028.jpg,UD Kurniawan Prayoga (Persero) Tbk,INV-2025-3925,2026-03-01,IDR,5765000,634150,6399150,4,ringan
+hard_invoice_029.jpg,Perum Hassanah Mandala,INV-2024-7311,2026-09-19,IDR,4560000,501600,5061600,2,sedang
+hard_invoice_030.jpg,CV Setiawan Hariyah (Persero) Tbk,INV-2025-8066,2026-04-11,IDR,4075000,448250,4523250,2,berat
+hard_invoice_031.jpg,CV Wibowo,INV-2026-3085,2026-06-01,IDR,6195000,681450,6876450,4,ringan
+hard_invoice_032.jpg,PD Saptono,INV-2025-8238,2026-06-14,IDR,7815000,859650,8674650,5,sedang
+hard_invoice_033.jpg,PT Melani Hutapea,INV-2024-4848,2026-06-21,IDR,5755000,633050,6388050,3,berat
+hard_invoice_034.jpg,PT Riyanti Hidayat,INV-2024-7291,2026-10-22,IDR,1915000,210650,2125650,3,ringan
+hard_invoice_035.jpg,PD Lazuardi Purnawati,INV-2026-9486,2026-04-01,IDR,2325000,255750,2580750,3,sedang
+hard_invoice_036.jpg,Perum Riyanti Gunarto,INV-2025-3607,2026-10-08,IDR,13200000,1452000,14652000,6,berat
+hard_invoice_037.jpg,PD Wahyuni,INV-2025-6502,2026-05-01,IDR,6210000,683100,6893100,4,ringan
+hard_invoice_038.jpg,Perum Prabowo,INV-2024-7797,2026-04-20,IDR,3465000,381150,3846150,2,sedang
+hard_invoice_039.jpg,CV Tampubolon (Persero) Tbk,INV-2026-4613,2026-10-07,IDR,12510000,1376100,13886100,6,berat
+hard_invoice_040.jpg,UD Suryono Manullang,INV-2024-7455,2026-10-01,IDR,7825000,860750,8685750,4,ringan

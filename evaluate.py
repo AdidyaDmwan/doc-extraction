@@ -7,13 +7,11 @@ from contextlib import closing
 from pathlib import Path
 
 DB_PATH = "data/documents.db"
-GT_PATH = "data/ground_truth.csv"
-DETAILS_PATH = "data/evaluation_details.csv"
-REPORT_PATH = "evaluation_report.md"
 
 TEXT_FIELDS = ["vendor_name", "invoice_number", "invoice_date", "currency"]
 NUM_FIELDS = ["subtotal", "tax", "total"]
 FIELDS = TEXT_FIELDS + NUM_FIELDS + ["num_items"]
+DIFFICULTY_ORDER = ["ringan", "sedang", "berat"]
 
 NUM_TOLERANCE = 1.0  # selisih angka yang dianggap sama (misalnya pembulatan)
 
@@ -34,8 +32,8 @@ def is_correct(field: str, got, expected) -> bool:
     return norm(got) == norm(expected)
 
 
-def load_ground_truth() -> dict:
-    with open(GT_PATH, newline="", encoding="utf-8") as f:
+def load_ground_truth(path: str) -> dict:
+    with open(path, newline="", encoding="utf-8") as f:
         return {row["filename"]: row for row in csv.DictReader(f)}
 
 
@@ -55,6 +53,7 @@ def evaluate_document(row, truth) -> dict:
         "model": row["model_used"],
         "seconds": row["processing_seconds"],
         "extracted": data is not None,
+        "difficulty": truth.get("difficulty"),
     }
     for field in FIELDS:
         if data is None:
@@ -83,9 +82,22 @@ def main():
         "--manual-seconds", type=float, default=240,
         help="ASUMSI waktu input manual per dokumen (detik). Default 240 = 4 menit.",
     )
+    parser.add_argument(
+        "--suffix", default="",
+        help="Nama set data tambahan, misalnya 'hard' -> data/ground_truth_hard.csv",
+    )
     args = parser.parse_args()
 
-    truth = load_ground_truth()
+    if args.suffix:
+        gt_path = f"data/ground_truth_{args.suffix}.csv"
+        report_path = f"evaluation_report_{args.suffix}.md"
+        details_path = f"data/evaluation_details_{args.suffix}.csv"
+    else:
+        gt_path = "data/ground_truth.csv"
+        report_path = "evaluation_report.md"
+        details_path = "data/evaluation_details.csv"
+
+    truth = load_ground_truth(gt_path)
     results = load_results()
 
     evaluated = [
@@ -102,7 +114,7 @@ def main():
     lines = []
     out = lines.append
 
-    out("# Laporan Evaluasi\n")
+    out("# Laporan Evaluasi" + (f" ({args.suffix})" if args.suffix else "") + "\n")
     out(f"Dokumen dievaluasi: **{n}** dari {len(truth)} di ground truth")
     if missing:
         out(f"Belum diproses: {len(missing)} dokumen ({', '.join(missing[:5])}{'...' if len(missing) > 5 else ''})")
@@ -144,7 +156,33 @@ def main():
             out(f"- {r['filename']}: salah pada {', '.join(r['wrong_fields'])}")
     out("")
 
-    # 3. Waktu
+    # 3. Hasil per tingkat kesulitan (hanya jika ground truth punya kolom 'difficulty')
+    levels = [lv for lv in DIFFICULTY_ORDER if any(r["difficulty"] == lv for r in evaluated)]
+    if levels:
+        out("## Hasil per tingkat kesulitan\n")
+        out("| Tingkat | Dokumen | Semua field benar | Disetujui otomatis | Salah tapi lolos otomatis |")
+        out("|---|---|---|---|---|")
+        for lv in levels:
+            grp = [r for r in evaluated if r["difficulty"] == lv]
+            g_exact = sum(r["all_correct"] for r in grp)
+            g_auto = [r for r in grp if r["status"] == "auto_approved"]
+            g_false = sum(not r["all_correct"] for r in g_auto)
+            out(f"| {lv} | {len(grp)} | {g_exact}/{len(grp)} ({pct(g_exact, len(grp))}) "
+                f"| {len(g_auto)}/{len(grp)} ({pct(len(g_auto), len(grp))}) | {g_false} |")
+        out("")
+
+    # 4. Daftar dokumen yang salah (untuk analisis error)
+    wrong_docs = [r for r in evaluated if not r["all_correct"]]
+    if wrong_docs:
+        out("## Dokumen yang salah (untuk analisis error)\n")
+        for r in wrong_docs[:20]:
+            tag = f" [{r['difficulty']}]" if r["difficulty"] else ""
+            out(f"- {r['filename']}{tag}: status {r['status']}, salah pada {', '.join(r['wrong_fields'])}")
+        if len(wrong_docs) > 20:
+            out(f"- ... dan {len(wrong_docs) - 20} dokumen lain (lihat {details_path})")
+        out("")
+
+    # 5. Waktu
     times = [r["seconds"] for r in evaluated if r["seconds"] is not None]
     if times:
         median = statistics.median(times)
@@ -159,34 +197,40 @@ def main():
         out(f"| Perbandingan terhadap asumsi manual | sekitar {args.manual_seconds / median:.0f}x lebih cepat (median) |")
         out("")
 
-    # 4. Model yang dipakai
+    # 6. Model yang dipakai
     models = {}
     for r in evaluated:
-        models[r["model"] or "(gagal)"] = models.get(r["model"] or "(gagal)", 0) + 1
+        key = r["model"] or "(gagal)"
+        models[key] = models.get(key, 0) + 1
     out("## Model yang dipakai\n")
     for m, c in sorted(models.items(), key=lambda x: -x[1]):
         out(f"- {m}: {c} dokumen")
     out("")
 
     out("## Catatan\n")
-    out("- Evaluasi ini memakai data dummy yang dibuat otomatis (bersih dan rapi), sehingga akurasi cenderung tinggi.")
-    out("- Hasil pada dokumen nyata (miring, buram, format beragam) perlu diuji terpisah.")
+    if levels:
+        out("- Set data ini adalah dokumen sintetis yang sengaja dirusak (dimiringkan, diburamkan, diberi noise dan bayangan).")
+        out("- Ini masih simulasi kondisi nyata, bukan foto dokumen asli.")
+    else:
+        out("- Evaluasi ini memakai data dummy yang dibuat otomatis (bersih dan rapi), sehingga akurasi cenderung tinggi.")
+        out("- Hasil pada dokumen nyata (miring, buram, format beragam) perlu diuji terpisah.")
     out("- Waktu manual adalah asumsi, bukan pengukuran.")
 
     report = "\n".join(lines)
     print(report)
-    Path(REPORT_PATH).write_text(report + "\n", encoding="utf-8")
+    Path(report_path).write_text(report + "\n", encoding="utf-8")
 
     # Detail per dokumen untuk analisis error
-    with open(DETAILS_PATH, "w", newline="", encoding="utf-8") as f:
-        cols = ["filename", "status", "model", "seconds", "all_correct", "wrong_fields"]
+    with open(details_path, "w", newline="", encoding="utf-8") as f:
+        cols = ["filename", "difficulty", "status", "model", "seconds", "all_correct", "wrong_fields"]
         w = csv.DictWriter(f, fieldnames=cols)
         w.writeheader()
         for r in evaluated:
-            w.writerow({**{c: r[c] for c in cols if c != "wrong_fields"},
-                        "wrong_fields": ";".join(r["wrong_fields"])})
+            row = {c: r[c] for c in cols if c != "wrong_fields"}
+            row["wrong_fields"] = ";".join(r["wrong_fields"])
+            w.writerow(row)
 
-    print(f"\n(Laporan disimpan di {REPORT_PATH}, detail per dokumen di {DETAILS_PATH})")
+    print(f"\n(Laporan disimpan di {report_path}, detail per dokumen di {details_path})")
 
 
 if __name__ == "__main__":
