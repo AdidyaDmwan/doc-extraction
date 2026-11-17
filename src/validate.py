@@ -7,8 +7,11 @@ from .schema import Invoice
 # Toleransi selisih hitungan (dalam satuan mata uang, misalnya rupiah)
 TOLERANCE = 1.0
 
-# Di bawah angka ini, dokumen selalu ditinjau manusia
-CONFIDENCE_THRESHOLD = 0.85
+# Di bawah angka ini, dokumen selalu ditinjau manusia.
+# Dipilih 0.96 dari analisis threshold_sweep.py pada set 'hard' (sebelumnya 0.85):
+# model sering melaporkan 0.95 saat kurang yakin. Nilai ini spesifik untuk model yang dipakai
+# dan belum dikonfirmasi pada set uji baru.
+CONFIDENCE_THRESHOLD = 0.96
 
 AUTO_APPROVED = "auto_approved"
 NEEDS_REVIEW = "needs_review"

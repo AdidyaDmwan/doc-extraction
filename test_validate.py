@@ -19,7 +19,7 @@ def make_valid() -> Invoice:
             LineItem(description="Mouse Wireless", quantity=2, unit_price=100000, amount=200000),
             LineItem(description="Flashdisk 64GB", quantity=1, unit_price=50000, amount=50000),
         ],
-        confidence=0.95,
+        confidence=1.0,
         uncertain_fields=[],
     )
 
@@ -44,6 +44,8 @@ CASES = [
     ("Mata uang ditulis Rp", variant(currency="Rp"), NEEDS_REVIEW),
     ("Mata uang kosong", variant(currency=None), NEEDS_REVIEW),
     ("Confidence rendah", variant(confidence=0.6), NEEDS_REVIEW),
+    ("Confidence 0.95 (di bawah 0.96)", variant(confidence=0.95), NEEDS_REVIEW),
+    ("Confidence 0.98 (cukup yakin)", variant(confidence=0.98), AUTO_APPROVED),
     ("AI ragu pada field", variant(uncertain_fields=["total"]), NEEDS_REVIEW),
 ]
 

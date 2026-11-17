@@ -21,16 +21,12 @@ Dokumen dengan **semua field benar**: 38/40 (95.0%)
 
 | Metrik | Hasil |
 |---|---|
-| Disetujui otomatis | 39/40 (97.5%) |
-| Akurasi pada yang disetujui otomatis | 37/39 (94.9%) |
-| Salah tapi lolos otomatis (paling berbahaya) | 2 |
-| Dikirim ke review manusia | 1/40 (2.5%) |
-| ...dari itu yang memang salah | 0 |
-| ...dari itu yang sebenarnya benar (review tidak perlu) | 1 |
-
-Dokumen salah yang lolos otomatis:
-- hard_invoice_009.jpg: salah pada invoice_date
-- hard_invoice_030.jpg: salah pada invoice_number
+| Disetujui otomatis | 28/40 (70.0%) |
+| Akurasi pada yang disetujui otomatis | 28/28 (100.0%) |
+| Salah tapi lolos otomatis (paling berbahaya) | 0 |
+| Dikirim ke review manusia | 12/40 (30.0%) |
+| ...dari itu yang memang salah | 2 |
+| ...dari itu yang sebenarnya benar (review tidak perlu) | 10 |
 
 ## Kalibrasi confidence (apakah keyakinan AI bisa dipercaya?)
 
@@ -49,13 +45,13 @@ Jika dokumen yang salah muncul di nilai confidence tinggi, angka itu tidak bisa 
 | Tingkat | Dokumen | Semua field benar | Disetujui otomatis | Salah tapi lolos otomatis |
 |---|---|---|---|---|
 | ringan | 14 | 14/14 (100.0%) | 14/14 (100.0%) | 0 |
-| sedang | 13 | 13/13 (100.0%) | 13/13 (100.0%) | 0 |
-| berat | 13 | 11/13 (84.6%) | 12/13 (92.3%) | 2 |
+| sedang | 13 | 13/13 (100.0%) | 11/13 (84.6%) | 0 |
+| berat | 13 | 11/13 (84.6%) | 3/13 (23.1%) | 0 |
 
 ## Dokumen yang salah (untuk analisis error)
 
-- hard_invoice_009.jpg [berat]: status auto_approved, salah pada invoice_date
-- hard_invoice_030.jpg [berat]: status auto_approved, salah pada invoice_number
+- hard_invoice_009.jpg [berat]: status needs_review, salah pada invoice_date
+- hard_invoice_030.jpg [berat]: status needs_review, salah pada invoice_number
 
 ## Waktu pemrosesan
 
