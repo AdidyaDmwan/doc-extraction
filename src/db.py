@@ -33,8 +33,14 @@ def _connect() -> sqlite3.Connection:
 
 
 def init_db() -> None:
+    """Buat tabel jika belum ada, dan tambahkan kolom baru untuk review manusia (migrasi aman)."""
     with closing(_connect()) as conn:
         conn.execute(SCHEMA)
+        existing = {r["name"] for r in conn.execute("PRAGMA table_info(documents)")}
+        if "corrected_json" not in existing:
+            conn.execute("ALTER TABLE documents ADD COLUMN corrected_json TEXT")
+        if "reviewed_at" not in existing:
+            conn.execute("ALTER TABLE documents ADD COLUMN reviewed_at TEXT")
         conn.commit()
 
 
@@ -109,3 +115,34 @@ def get_summary() -> dict:
         "mean_seconds": statistics.mean(times) if times else None,
         "median_seconds": statistics.median(times) if times else None,
     }
+
+
+def get_documents(statuses: Optional[List[str]] = None) -> list:
+    """Ambil dokumen, opsional difilter berdasarkan daftar status."""
+    with closing(_connect()) as conn:
+        if statuses:
+            marks = ",".join("?" * len(statuses))
+            return conn.execute(
+                f"SELECT * FROM documents WHERE status IN ({marks}) ORDER BY filename",
+                list(statuses),
+            ).fetchall()
+        return conn.execute("SELECT * FROM documents ORDER BY filename").fetchall()
+
+
+def get_document(filename: str):
+    with closing(_connect()) as conn:
+        return conn.execute(
+            "SELECT * FROM documents WHERE filename = ?", (filename,)
+        ).fetchone()
+
+
+def save_review(filename: str, status: str, corrected_json: str) -> None:
+    """Simpan hasil tinjauan manusia. Output asli AI (data_json) tidak diubah,
+    sehingga selalu bisa dibandingkan dengan koreksi untuk audit."""
+    with closing(_connect()) as conn:
+        conn.execute(
+            "UPDATE documents SET status = ?, corrected_json = ?, reviewed_at = ? "
+            "WHERE filename = ?",
+            (status, corrected_json, datetime.now().isoformat(timespec="seconds"), filename),
+        )
+        conn.commit()
